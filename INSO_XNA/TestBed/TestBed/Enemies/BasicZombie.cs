@@ -20,7 +20,7 @@ namespace TestBed
 		//    _thumbnail = TextureLibrary.GetSpriteSheet("thb_zombie_base");
 		//}
 
-		float m_speed = 1.5f;
+		float m_speed = 0.5f;
 		AABBCollider m_collider;
 		SingleActionManager m_actionManager;
 		BodyPart m_head, m_armL, m_armR, m_upperB, m_lowerB;
@@ -69,11 +69,16 @@ namespace TestBed
              // new BodyPart(this, new Vector2(10, -50), "bp_basezombieupperb"),
              //   new BodyPart(this, new Vector2(10, -10), "bp_basezombielowerb") 
 			//};
-			m_head = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombiehead"), Transform);
-			m_armL = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombiearm"), Transform);
-			m_armR = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombiearm"), Transform);
-			m_upperB = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombieupperb"), Transform);
-			m_lowerB = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombielowerb"), Transform);
+			m_head = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombiehead"), new Transform(Transform, true));
+			m_head.Transform.Position = new Vector2(5, -80);
+			m_armL = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombiearm"), new Transform(Transform, true));
+			m_armL.Transform.Position = new Vector2(5, -50);
+			m_armR = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombiearm"), new Transform(Transform, true));
+			m_armR.Transform.Position = new Vector2(-5, -50);
+			m_upperB = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombieupperb"), new Transform(Transform, true));
+			m_upperB.Transform.Position = new Vector2(0, -45);
+			m_lowerB = new BodyPart(TextureLibrary.GetSpriteSheet("bp_basezombielowerb"), new Transform(Transform, true));
+			m_upperB.Transform.Position = new Vector2(0, -30);
 
 			///
 			///Hit events
@@ -87,7 +92,7 @@ namespace TestBed
 			m_destructible.AddHealthEvent(3, false, new MethodAction(delegate()
 				{
 					m_actionManager.StartNew(m_noHead);
-					m_head.Pop(-1.1f, 27, true);
+					m_head.Pop(-1.1f, 10, true);
 				}));
 			m_destructible.AddHealthEvent(2, false, new MethodAction(delegate()
 			{
@@ -105,6 +110,8 @@ namespace TestBed
 				m_lowerB.Pop(-1.1f, 27, true);
 				ObjectState.Destroy();
 			}));
+
+			ObjectState.Begin();
         }
 
 		public override void OnSpawn(Spawner section)
@@ -130,21 +137,21 @@ namespace TestBed
 			m_actionManager.Update();
 			
             if(!m_physics.IsProjected)
-                Transform.PosX -= m_speed;
+                Transform.PosX -= m_speed * (float)Globals.TheGame.ElapsedTime;
         }
 		public override void Draw()
 		{
+			if (ObjectState.State != ActorState.Destroyed)
+			{
+				m_destructible.Draw();
+				m_sprite.Draw();
+			}
+
 			m_head.Draw();
 			m_armL.Draw();
 			m_armR.Draw();
 			m_upperB.Draw();
 			m_lowerB.Draw();
-
-			if (ObjectState.State == ActorState.Destroyed)
-				return;
-
-			m_destructible.Draw();
-			m_sprite.Draw();
 		}
     }
 }

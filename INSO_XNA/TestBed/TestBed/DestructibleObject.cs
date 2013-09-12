@@ -100,11 +100,11 @@ namespace TestBed
 		public void SetHitEvent(AttackType attackType, ColliderGroup.OnCollision attackHitEvent)
 		{
 			int i = (int)attackType;
-			m_attackHitEventCache[i] = attackHitEvent;
 			if (m_attackHitEventCache[i] == null)
 				DestructibleColliders[i].Add(m_collider, attackHitEvent);
 			else
 				DestructibleColliders[i].ReplaceAction(m_collider, attackHitEvent);
+			m_attackHitEventCache[i] = attackHitEvent;
 		}
 		public void ClearHitEvents()
 		{
@@ -132,7 +132,7 @@ namespace TestBed
 				List<HealthEvent> selectedEvents = new List<HealthEvent>();
 				
 				//Fills the selectedEvents list from lowest to highest hpThreshold
-				for (int j = 0; j > m_healthEvents.Count; ++j)
+				for (int j = 0; j < m_healthEvents.Count; ++j)
 				{
 					if (m_healthEvents[j].healthThreshold >= _hpCurrent
 						&& m_healthEvents[j].healthThreshold < prevHP)

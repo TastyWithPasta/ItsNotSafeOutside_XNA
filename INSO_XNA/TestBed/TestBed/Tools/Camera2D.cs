@@ -64,7 +64,7 @@ namespace TestBed
 				//    m_zoom--;
 			}
 			Matrix.CreateScale(m_zoom, m_zoom, 1, out scaleM);
-			Matrix.CreateTranslation(posGlobal.X, posGlobal.Y, 0, out posM);
+			Matrix.CreateTranslation(posGlobal.X, -posGlobal.Y, 0, out posM);
 
 			//Different order than transform matrix!
 			Matrix.Multiply(ref posM, ref scaleM, out temp);

@@ -79,6 +79,11 @@ namespace TestBed
 		Sprite m_sprite;
 		PhysicsComponent m_physics;
 
+		public Transform Transform
+		{
+			get { return m_transform; }
+		}
+
         float m_shrinkSpeed = 0.1f;
         bool m_hasPopped = false;
 
@@ -109,8 +114,8 @@ namespace TestBed
 
 				if (m_transform.SclX > 0)
                 {
-					m_transform.SclX -= m_shrinkSpeed;
-					m_transform.SclY -= m_shrinkSpeed;
+					m_transform.SclX -= m_shrinkSpeed * (float)Globals.TheGame.ElapsedTime;
+					m_transform.SclY -= m_shrinkSpeed * (float)Globals.TheGame.ElapsedTime;
                 }
                 else
                 {
@@ -132,7 +137,7 @@ namespace TestBed
 			//    PlaceInFrontOf(GetParent());
 			//    UnbindParent();
 			//}       
-
+			m_transform.Position = m_transform.PositionGlobal;
 			m_transform.ParentTransform = null;
             speed += (float)(Globals.Random.NextDouble() * speed * 0.5 - speed * 0.25f);
             m_physics.Throw((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed, 0.5f);

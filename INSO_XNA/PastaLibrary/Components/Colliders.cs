@@ -411,7 +411,8 @@ namespace PastaGameLibrary
 
 		public Rectangle Bounds
 		{
-			get { return m_bounds; }
+			//get { return m_bounds; }
+			get { return m_aabb.GetBounds(); } //Inefficient, switch to the update instead if efficiency issues
 		}
 		public AABB AABB
 		{

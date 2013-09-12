@@ -35,15 +35,14 @@ namespace PastaGameLibrary
 	{
 		public delegate void TimerTask();
 		TimerTask m_task;
-		bool m_paused = false;
+		bool m_paused = true;
 		float m_intervalInSeconds = 1;
 		float m_timeRemainingInSeconds = 0;
 		PTimerManager m_manager = null;
 
-		public bool Paused
+		public bool IsPaused
 		{
 			get { return m_paused; }
-			set { m_paused = value; }
 		}
 		public float ProgressRatio
 		{
@@ -53,7 +52,11 @@ namespace PastaGameLibrary
 		public float Interval 
 		{
 			get { return m_intervalInSeconds; }
-			set { m_intervalInSeconds = value; }
+			set { 
+				m_intervalInSeconds = value;
+				if (m_paused)
+					m_timeRemainingInSeconds = m_intervalInSeconds;
+			}
 		}
 
 		public PTimer(PTimerManager manager, TimerTask task)
@@ -61,25 +64,37 @@ namespace PastaGameLibrary
 			m_manager = manager;
 			m_manager.AddTimer(this);
 			m_task = task;
+			m_timeRemainingInSeconds = m_intervalInSeconds;
 		}
 
-		void Delay(float delayTimeInSeconds)
+		public void Delay(float delayTimeInSeconds)
 		{
 			m_timeRemainingInSeconds -= delayTimeInSeconds; 
 		}
-		void Reset()
+		public void Start()
 		{
-			m_timeRemainingInSeconds = 0;
+			m_paused = false;
+		}
+		public void Pause()
+		{
+			m_paused = true;
+		}
+		public void Stop()
+		{
+			m_timeRemainingInSeconds = m_intervalInSeconds;
+			m_paused = true;
 		}
 
 		internal void Update(float elapsedTime)
 		{
+			if (m_paused)
+				return;
 			m_timeRemainingInSeconds -= elapsedTime;
 			while (m_timeRemainingInSeconds < 0)
 			{
+				m_timeRemainingInSeconds += m_intervalInSeconds;
 				if(m_task != null)
 					m_task();
-				m_timeRemainingInSeconds += m_intervalInSeconds;
 			}
 		}
 

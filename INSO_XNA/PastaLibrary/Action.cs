@@ -33,11 +33,6 @@ namespace PastaGameLibrary
 			m_isPaused = true;
 			OnPause();
 		}
-		public void Resume()
-		{
-			m_isPaused = false;
-			OnResume();
-		}
 		public void Update()
 		{
 			if(!m_isActive || m_isPaused)
@@ -88,6 +83,24 @@ namespace PastaGameLibrary
 			get { return m_isLooping; }
 		}
 
+		protected override void OnStart()
+		{
+			base.OnStart();
+			m_timer.Start();
+		}
+
+		protected override void OnPause()
+		{
+			base.OnPause();
+			m_timer.Pause();
+		}
+
+		protected override void OnStop()
+		{
+			base.OnStop();
+			m_timer.Stop();
+		}
+
 		public void Dispose()
 		{
 			m_timer.Dispose();
@@ -98,9 +111,10 @@ namespace PastaGameLibrary
 		public delegate void ActionMethod();
 		ActionMethod m_actionMethod;
 
-		public MethodAction(ActionMethod m_actionMethod)
+		public MethodAction(ActionMethod actionMethod)
 			: base()
 		{
+			m_actionMethod = actionMethod;
 		}
 
 		protected override void OnUpdate()
@@ -160,6 +174,17 @@ namespace PastaGameLibrary
 		Transform m_transform = null;
 		Vector2 m_target, m_startPos;
 
+		public Vector2 Target
+		{
+			get { return m_target; }
+			set { m_target = value; }
+		}
+		public Vector2 StartPosition
+		{
+			get { return m_startPos; }
+			set { m_startPos = value; }
+		}
+
 		public MoveToStaticAction(MyGame theGame, Transform transform, Vector2 target, bool isLooping)
 			: base(theGame, isLooping)
 		{
@@ -167,6 +192,7 @@ namespace PastaGameLibrary
 			m_startPos = m_transform.Position;
 			m_target = target;
 		}
+
 		protected override void OnUpdate()
 		{
 			float progressRatio = Timer.ProgressRatio;
@@ -269,7 +295,8 @@ namespace PastaGameLibrary
 
 		public void StartNew(Action currentAction)
 		{
-			m_currentAction.Stop();
+			if(m_currentAction != null)
+				m_currentAction.Stop();
 			m_currentAction = currentAction;
 			m_currentAction.Start();
 		}

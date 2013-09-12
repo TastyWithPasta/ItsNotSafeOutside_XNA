@@ -66,6 +66,7 @@ namespace TestBed
         bool _nextHitIsCritical;
 
 
+		BasicEffect m_effect;
 		AttackComponent m_attack;
         SlashState m_slashState;
 		LineCollider m_sliceCollider;
@@ -109,7 +110,8 @@ namespace TestBed
             //_vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.None);
 
 			m_attack = new AttackComponent(1, 0.1f);
-			m_attack.IsActive = true;
+			m_attack.Unlock();
+			m_attack.Enable();
 
             _minLength = minLength;
 
@@ -124,7 +126,16 @@ namespace TestBed
             InitMatrices();
             InitVertices();
 
+			World.UL_Global.Add(this, 0);
 			World.DL_Foreground.Add(this, 0);
+
+			m_effect = new BasicEffect(device);
+			m_effect.LightingEnabled = false;
+			m_effect.VertexColorEnabled = false;
+
+			m_effect.World = _world;
+			m_effect.View = _view;
+			m_effect.Projection = _projection;
         }
 
         private void InitMatrices()
@@ -217,7 +228,7 @@ namespace TestBed
                             _endPosition = _startPosition + _maxLength * direction;
                             
 							//Do collisions
-							DestructibleComponent.DestructibleColliders[(int)AttackType.Shuriken].DoCollision(m_sliceCollider, null);
+							DestructibleComponent.DestructibleColliders[(int)AttackType.Slash].DoCollision(m_sliceCollider, null);
                             
 							m_slashState = SlashState.Vanishing;
                             break;
@@ -226,7 +237,7 @@ namespace TestBed
                             if (HasSlashStopped())
                             {
 								//Do collisions
-								DestructibleComponent.DestructibleColliders[(int)AttackType.Shuriken].DoCollision(m_sliceCollider, null);
+								DestructibleComponent.DestructibleColliders[(int)AttackType.Slash].DoCollision(m_sliceCollider, null);
                                 m_slashState = SlashState.Vanishing;
                                 break;
                             }
@@ -360,17 +371,10 @@ namespace TestBed
         {
 			//for (int i = 0; i < _sparks.Count; ++i)
 			//    _sparks[i].Draw(spriteBatch);
-
+			
             if (_drawFlag)
             {
-                BasicEffect effect = new BasicEffect(_device);
-                effect.LightingEnabled = false;
-                effect.VertexColorEnabled = true;
-
-                effect.World = _world;
-                effect.View = _view;
-                effect.Projection = _projection;
-                effect.CurrentTechnique.Passes[0].Apply();
+				m_effect.CurrentTechnique.Passes[0].Apply();
                 //device.SetVertexBuffer(_vertexBuffer);
                 //device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, _vertices, 0, TriangleCount);
                 _device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _vertices, 0, 1);

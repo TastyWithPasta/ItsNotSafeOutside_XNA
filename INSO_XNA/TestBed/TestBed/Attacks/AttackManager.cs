@@ -19,11 +19,5 @@ namespace TestBed
 		{
 			Slash = new Slash(device, LengthTrigger);
 		}
-
-        public static void Update()
-        {
-            //Slash.Attack.IsActive = !(Fire.CurrentState == INSO.Attacks.Fireball.FireState.On);
-			Slash.Update();
-        }
     }
 }

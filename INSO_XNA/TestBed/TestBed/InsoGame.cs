@@ -19,6 +19,8 @@ namespace TestBed
 	{
 		ColliderGroup colliders;
 		Level level;
+		MoveToStaticAction cameraMove;
+		ScaleToAction cameraZoom;
 
 		public ColliderGroup Colliders
 		{
@@ -51,6 +53,14 @@ namespace TestBed
 
 			level = new Level(new Transform());
 			level.BuildFirst();
+
+			cameraMove = new MoveToStaticAction(this, World.cam_Main.Transform, new Vector2(0, -350), false);
+			cameraMove.Interpolator = new PSmoothstepInterpolation();
+			cameraMove.Timer.Interval = 1.0f;
+
+			cameraZoom = new ScaleToAction(this, World.cam_Main.Transform, new Vector2(0.5f, 0.5f), false);
+			cameraZoom.Interpolator = new PSmoothstepInterpolation();
+			cameraZoom.Timer.Interval = 1.2f;
 		}
 
 		protected override void LoadContent()
@@ -65,13 +75,25 @@ namespace TestBed
 		protected override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
+
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
 				this.Exit();
 
-			if(World.kbs.IsKeyDown(Keys.Space))
-				Coin.SpawnCoin(COIN_TYPE.GOLD, Vector2.Zero);
+			TouchInput.Update();
 
-			AttackManager.Update();
+			if (World.kbs.IsKeyDown(Keys.Space) && !cameraMove.IsActive)
+			{
+				World.cam_Main.Transform.PosY = 0;
+				cameraMove.StartPosition = new Vector2(World.cam_Main.Transform.PosX, 0);
+				cameraMove.Target = World.cam_Main.Transform.Position + new Vector2(0, -350);
+
+				cameraZoom.Start();
+				cameraMove.Start();
+				//Coin.SpawnCoin(COIN_TYPE.GOLD, Vector2.Zero);
+			}
+
+			cameraMove.Update();
+			cameraZoom.Update();
 			World.Update();
 		}
 

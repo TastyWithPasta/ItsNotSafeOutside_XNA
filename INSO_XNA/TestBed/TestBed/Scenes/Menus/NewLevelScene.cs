@@ -28,8 +28,8 @@ namespace TestBed
 			m_animation = new Animation(m_buttonSprite, 0, 3, 0.5f, true);
 			m_popAction = new SingleActionManager();
 
-			m_in = new MoveToStaticAction(Globals.TheGame, m_transform, new Vector2(150, 300), false);
-			m_out = new MoveToStaticAction(Globals.TheGame, m_transform, new Vector2(150, 0), false);
+			//m_in = new MoveToStaticAction(Globals.TheGame, m_transform, new Vector2(150, 300), false);
+			//m_out = new MoveToStaticAction(Globals.TheGame, m_transform, new Vector2(150, 0), false);
 			m_transform.Position = new Vector2(150, 300);
 
 			_generation = new Counter(2, TextureLibrary.GetSpriteSheet("levelscore_vertical", 20, 1));

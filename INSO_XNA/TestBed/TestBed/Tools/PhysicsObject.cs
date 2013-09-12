@@ -61,7 +61,7 @@ namespace TestBed
 
                 if (angleIncrementRange != 0)
                 {
-                    m_transform.Direction += (float)(Globals.Random.NextDouble() * 0.5 - 0.25);
+					m_transform.Direction += (float)(Globals.Random.NextDouble() * 0.5 - 0.25);
 					m_angleIncrement = (float)(Globals.Random.NextDouble() * angleIncrementRange - angleIncrementRange * 0.5);
                 }
                 else
@@ -75,13 +75,15 @@ namespace TestBed
 		}
         private void UpdateProjectionPhysics()
         {
+			float dt = (float)Globals.TheGame.ElapsedTime;
 			m_previousY = m_transform.PosY;
 
-            m_transform.Direction += m_angleIncrement;
-            m_velocity.Y += 2.0f * Mass;
+			m_transform.Direction += m_angleIncrement * dt;
+
+			m_velocity.Y += 9.8f * Mass * dt; //294 = 9.8 * 3 * 10 => 1m = 20 px
             m_velocity *= AirFriction;
-			m_transform.PosX += m_velocity.X;
-			m_transform.PosY += m_velocity.Y;
+			m_transform.PosX += m_velocity.X * dt;
+			m_transform.PosY += m_velocity.Y * dt;
 
 			if (m_transform.PosY >= GroundLevel)
             {
@@ -96,7 +98,7 @@ namespace TestBed
 
 			if (m_previousY == m_transform.PosY)
             {
-				m_stillnessTimer -= (float)m_myGame.ElapsedTime;
+				m_stillnessTimer -= dt;
                 if (m_stillnessTimer < 0)
                     m_isProjected = false;
             }

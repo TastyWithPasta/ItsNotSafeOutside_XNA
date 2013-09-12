@@ -20,9 +20,8 @@ namespace TestBed
 		const float TreeRatio = 0.5f;
 		const int AmountOfSectionTypes = 2;
 
-		const int EarthTileCount = 10;
-		const int GroundEnemySpawnersPerTile = 3;
-		const int GroundEnemySpawnerCount = 15;
+		const int EarthTileCount = 4;
+		const int GroundEnemySpawnersPerTile = 5;
 
 		public const int GroundSectionIndex = 0;
 		public const int TreeSectionIndex = 1;

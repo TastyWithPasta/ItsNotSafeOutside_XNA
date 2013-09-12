@@ -18,7 +18,7 @@ namespace TestBed
 	
 	public class AttackComponent
 	{
-		bool m_isActive;
+		bool m_isActive, m_isUnlocked;
 		AttackType m_type;
 		float m_baseDelay = 100, m_delayMultiplier = 1;
 		float m_baseDamage = 1, m_damageMultiplier = 1;
@@ -32,7 +32,20 @@ namespace TestBed
 		public bool IsActive
 		{
 			get { return m_isActive; }
-			set { m_isActive = value; }
+		}
+
+		public void Disable()
+		{
+			m_isActive = false;
+		}
+		public void Enable()
+		{
+			if (m_isUnlocked)
+				m_isActive = true;
+		}
+		public void Unlock()
+		{
+			m_isUnlocked = true;
 		}
 
 		public AttackType Type

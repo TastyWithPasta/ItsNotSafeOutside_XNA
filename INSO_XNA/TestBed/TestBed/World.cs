@@ -161,8 +161,9 @@ namespace TestBed
 			DL_GrassTiles.Draw();
 			DL_GroundItems.Draw();
 			DL_ItemDrops.Draw();
-			DL_Foreground.Draw();
+			//DL_Foreground.Draw();
 			sb.End();
+			AttackManager.Slash.Draw();
 		}
 	}
 }
