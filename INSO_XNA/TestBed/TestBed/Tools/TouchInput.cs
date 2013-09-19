@@ -5,6 +5,7 @@ using System.Text;
 //using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using PastaGameLibrary;
 
 namespace TestBed
 {
@@ -100,6 +101,13 @@ namespace TestBed
             Vector2 p = TouchPosition;
             return zone.Contains((int)p.X, (int)p.Y);
         }
+
+		public static void Draw()
+		{
+			Globals.TheGame.SpriteBatch.Begin();
+			Globals.TheGame.SpriteBatch.Draw(TextureLibrary.Get("cursor"), new Rectangle((int)m_currentTouch.X, (int)m_currentTouch.Y, 10, 10), Color.White);
+			Globals.TheGame.SpriteBatch.End();
+		}
     }
 }
 

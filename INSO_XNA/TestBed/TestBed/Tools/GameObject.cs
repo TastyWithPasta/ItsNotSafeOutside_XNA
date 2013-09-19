@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using PastaGameLibrary;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TestBed
 {
@@ -22,6 +23,7 @@ namespace TestBed
 
 			if (!gameObject.IsInitialised)
 				gameObject.Initialise();
+			gameObject.m_drawingList = this;
 
 			int i;
 			for (i = 0; i < m_drawables.Count; ++i)
@@ -64,6 +66,7 @@ namespace TestBed
 
 			if (!gameObject.IsInitialised)
 				gameObject.Initialise();
+			gameObject.m_updateList = this;
 
 			int i;
 			for (i = 0; i < m_updatables.Count; ++i)
@@ -212,8 +215,10 @@ namespace TestBed
 
 		public void ClearLists()
 		{
-			m_drawingList.Remove(this);
-			m_updateList.Remove(this);
+			if(m_drawingList != null)
+				m_drawingList.Remove(this);
+			if(m_updateList != null)
+				m_updateList.Remove(this);
 		}
 
 		internal void Initialise() { m_isInitialised = true; OnInitialise(); }

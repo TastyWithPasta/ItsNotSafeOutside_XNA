@@ -30,7 +30,7 @@ namespace TestBed
 		Spawner[] m_spawners;
 		SpawnType[] m_spawnTypes;
 
-		int m_mutationsPerReproduction = 0;
+		int m_mutationsPerReproduction = 100;
 		Chromosome m_chromosome;
 
 		public Chromosome Chromosome

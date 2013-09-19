@@ -19,8 +19,8 @@ namespace TestBed
 
         public static void Initialize(GraphicsDevice graphicsDevice)
         {
-            GameScene = new GameScene(graphicsDevice);
-            GameScene.Initialize();
+            //GameScene = new GameScene(graphicsDevice);
+            //GameScene.Initialize();
         }
 
 		public static void LaunchGame()

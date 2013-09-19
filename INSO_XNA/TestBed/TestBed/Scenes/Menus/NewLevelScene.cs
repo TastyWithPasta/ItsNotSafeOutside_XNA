@@ -17,7 +17,7 @@ namespace TestBed
         float _freeSpinTimer;
 
 		SingleActionManager m_popAction;
-		Animation m_animation;
+		SpriteSheetAnimation m_animation;
 		MoveToStaticAction m_in;
 		MoveToStaticAction m_out;
 
@@ -25,7 +25,7 @@ namespace TestBed
         public NewLevelButton()
             : base(new Sprite(Globals.TheGame, TextureLibrary.GetSpriteSheet("btn_newlevel", 1, 4), new Transform()))
         {
-			m_animation = new Animation(m_buttonSprite, 0, 3, 0.5f, true);
+			m_animation = new SpriteSheetAnimation(m_buttonSprite, 0, 3, 0.5f, true);
 			m_popAction = new SingleActionManager();
 
 			//m_in = new MoveToStaticAction(Globals.TheGame, m_transform, new Vector2(150, 300), false);

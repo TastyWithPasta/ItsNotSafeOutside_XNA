@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PastaGameLibrary;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace TestBed
 {
@@ -15,12 +17,16 @@ namespace TestBed
 		//public static Chest GameChest;
 		//public static Moon GameMoon;
 		//public static PointIndicators GamePointIndicators;
-		public static Level CurrentLevel;
 		//public static LevelGenerator LevelGenerator;
 		//public static UpgradeManager UpgradeManager;
 		//public static AttackManager AttackManager;
 		public static BackgroundObjectLibrary Backgrounds;
+		public static GameScene GameScene;
 		//public static Ninja Ninja;
+
+
+		public static SpriteFont debugFont;
+		public static KeyboardState kbs;
 
 
 		public static InsoGame TheGame
@@ -33,12 +39,18 @@ namespace TestBed
 		{
 			theGame = insoGame;
 
+			
+
 			Backgrounds = new BackgroundObjectLibrary();
+			TextureLibrary.Initialise(theGame.GraphicsDevice);
+			debugFont = insoGame.Content.Load<SpriteFont>("Spritefonts/debug");
 
 			EarthTile.GroundSectionTextures = new SpriteSheet[] 
 			{
 			    TextureLibrary.GetSpriteSheet("section"),
 			};
+
+			ShurikenReceiver.ImpactTexture = TextureLibrary.GetSpriteSheet("shuriken_impacteffect", 1, 4);
 
 			//Destructible.MiniFireTexture = TextureLibrary.GetSpriteSheet("minifire", 1, 4);
 

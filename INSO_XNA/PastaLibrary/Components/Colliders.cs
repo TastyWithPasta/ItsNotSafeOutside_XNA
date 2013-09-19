@@ -60,13 +60,13 @@ namespace PastaGameLibrary
 
 		public bool PointPoint(Collider point1, Collider point2)
 		{
-			Vector2 p1 = ((PointCollider)point1).Point;
-			Vector2 p2 = ((PointCollider)point2).Point;
+			Vector2 p1 = ((PointCollider)point1).Transform.PositionGlobal;
+			Vector2 p2 = ((PointCollider)point2).Transform.PositionGlobal;
 			return p1.X == p2.X && p1.Y == p2.Y;
 		}
 		public bool PointCircle(Collider point, Collider circle)
 		{
-			Vector2 p = ((PointCollider)point).Point;
+			Vector2 p = ((PointCollider)point).Transform.PositionGlobal;
 			Circle c = ((CircleCollider)circle).Circle;
 			return m_helper.Contains(c, p);
 		}
@@ -76,7 +76,7 @@ namespace PastaGameLibrary
 		}
 		public bool PointAABB(Collider point, Collider aabb)
 		{
-			Vector2 p = ((PointCollider)point).Point;
+			Vector2 p = ((PointCollider)point).Transform.PositionGlobal;
 			Rectangle r = ((AABBCollider)aabb).Bounds;
 			return (p.X > r.Left &&
 				p.Y > r.Top &&
@@ -340,12 +340,12 @@ namespace PastaGameLibrary
 
 	public class PointCollider : Collider
 	{
-		Vector2 m_point;
+		//Vector2 m_point;
 		Transform m_transform;
 
-		public Vector2 Point
+		public Transform Transform
 		{
-			get { return m_point; }
+			get { return m_transform; }
 		}
 
 		public PointCollider(Object owner, Transform transform) : base(owner, CollisionMethods.ColliderType.Point)
@@ -354,7 +354,7 @@ namespace PastaGameLibrary
 		}
 		public override void Update()
 		{
-			m_point = m_transform.PositionGlobal;
+			//m_point = m_transform.PositionGlobal;
 		}
 	}
 

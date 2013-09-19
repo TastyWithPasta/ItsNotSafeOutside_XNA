@@ -109,7 +109,7 @@ namespace TestBed
         {
             //_vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.None);
 
-			m_attack = new AttackComponent(1, 0.1f);
+			m_attack = new AttackComponent(0.6f, 0.1f);
 			m_attack.Unlock();
 			m_attack.Enable();
 
@@ -127,7 +127,6 @@ namespace TestBed
             InitVertices();
 
 			World.UL_Global.Add(this, 0);
-			World.DL_Foreground.Add(this, 0);
 
 			m_effect = new BasicEffect(device);
 			m_effect.LightingEnabled = false;

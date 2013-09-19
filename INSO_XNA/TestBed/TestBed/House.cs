@@ -32,7 +32,7 @@ namespace TestBed
 			m_entranceMask = new Sprite(Globals.TheGame, maskTexture, m_transform);
             m_entranceMask.Origin = new Vector2(0, 1);
 
-			m_drawingList = World.DL_Foreground;
+			m_drawingList = World.DL_House;
 			m_drawingList.Add(this, 0);
         }
 

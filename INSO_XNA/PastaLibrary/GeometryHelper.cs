@@ -292,6 +292,13 @@ namespace PastaGameLibrary
             return isIntersecting;
         }
 
+		public double GetAngle(Transform a, Transform b)
+		{
+			double dist = GetDistance(a.Position, b.Position);
+			double sine = (b.PosY - a.PosY) / dist;
+			double cosine = (b.PosX - a.PosX) / dist;
+			return GetAngle(cosine, sine);
+		}
         public double GetAngle(double cosine, double sine)
         {
             if (sine > 0)

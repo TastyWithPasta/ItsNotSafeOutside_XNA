@@ -14,7 +14,7 @@ namespace TestBed
 
 		Transform m_transform;
 		Sprite m_sprite;
-		Animation m_animation;
+		SpriteSheetAnimation m_animation;
 
 		public MiniFire(Transform parent, Vector2 position)
 		{
@@ -23,7 +23,7 @@ namespace TestBed
 			float scale = (float)Globals.Random.NextDouble() * 0.5f + 0.5f;
 			m_transform.Scale = new Vector2(scale, scale);
 			m_sprite = new Sprite(Globals.TheGame, MiniFireTexture, m_transform);
-			m_animation = new Animation(m_sprite, 0, 3, 0.1f, true);
+			m_animation = new SpriteSheetAnimation(m_sprite, 0, 3, 0.1f, true);
 		}
 
 		public void Update()

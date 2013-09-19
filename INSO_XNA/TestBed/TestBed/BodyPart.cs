@@ -8,6 +8,15 @@ using PastaGameLibrary;
 
 namespace TestBed
 {
+	public class PhysicsParticleData
+	{
+		public float Dir = 0;
+		public float Dir_Range = 3.14f;
+		public float For = 100;
+		public float For_Range = 50;
+		public float GroundLvl = 0;
+	}
+
 	public class PhysicsParticle : IParticle
 	{
 		const int DissapearTime = 20;
@@ -16,6 +25,7 @@ namespace TestBed
 		Transform m_transform;
 		Sprite m_sprite;
 		PhysicsComponent m_physics;
+		PhysicsParticleData m_data;
 
 		protected float m_ttl, m_maxTTL;
 
@@ -36,14 +46,23 @@ namespace TestBed
 			get{ return m_physics; }
 		}
 
-		public PhysicsParticle(MyGame theGame, Sprite sprite)
+		public PhysicsParticle(MyGame theGame, SpriteSheet spriteSheet, PhysicsParticleData data)
+		{
+			m_sprite = new Sprite(theGame, spriteSheet, new Transform());
+			m_theGame = theGame;
+			m_transform = m_sprite.Transform;
+			m_physics = new PhysicsComponent(m_theGame, m_sprite.Transform);
+			m_data = data;
+		}
+		public PhysicsParticle(Sprite sprite, PhysicsParticleData data)
 		{
 			//_burntTexture = TextureManager.GetBurnt(textureName);
 			//BindParent(parent);
 			m_sprite = sprite;
-			m_theGame = theGame;
+			m_theGame = m_sprite.TheGame;
 			m_transform = sprite.Transform;
-			m_physics = new PhysicsComponent(theGame, sprite.Transform);
+			m_physics = new PhysicsComponent(m_theGame, sprite.Transform);
+			m_data = data;
 		}
 
 		public bool RemoveMe()
@@ -84,7 +103,7 @@ namespace TestBed
 			get { return m_transform; }
 		}
 
-        float m_shrinkSpeed = 0.1f;
+        float m_shrinkSpeed = 1.0f;
         bool m_hasPopped = false;
 
 		public BodyPart(SpriteSheet spriteSheet, Transform transform)
@@ -109,25 +128,36 @@ namespace TestBed
 			m_physics.Update();
 
 			if (!m_physics.IsProjected)
-            {
+			{
 				m_physics.Stop();
 
 				if (m_transform.SclX > 0)
-                {
+				{
 					m_transform.SclX -= m_shrinkSpeed * (float)Globals.TheGame.ElapsedTime;
 					m_transform.SclY -= m_shrinkSpeed * (float)Globals.TheGame.ElapsedTime;
-                }
-                else
-                {
+				}
+				else
+				{
 					m_transform.SclX = 0;
 					m_transform.SclY = 0;
-                }
-            }
+				}
+			}
+			else
+			{
+				m_transform.SclX -= m_shrinkSpeed * 0.3f * (float)Globals.TheGame.ElapsedTime;
+				m_transform.SclY -= m_shrinkSpeed * 0.3f * (float)Globals.TheGame.ElapsedTime;
+			}
+
+			m_sprite.Alpha = m_transform.SclX * m_transform.SclX;
         }
 		public void Draw()
 		{
 			if (m_hasPopped)
 				m_sprite.Draw();
+		}
+		public void ForceDraw()
+		{
+			m_sprite.Draw();
 		}
        
         public void Pop(float angle, float speed, bool rotate)
@@ -140,7 +170,7 @@ namespace TestBed
 			m_transform.Position = m_transform.PositionGlobal;
 			m_transform.ParentTransform = null;
             speed += (float)(Globals.Random.NextDouble() * speed * 0.5 - speed * 0.25f);
-            m_physics.Throw((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed, 0.5f);
+            m_physics.Throw((float)Math.Cos(angle) * speed, (float)Math.Sin(angle) * speed, 10);
             m_hasPopped = true;
         }
     }

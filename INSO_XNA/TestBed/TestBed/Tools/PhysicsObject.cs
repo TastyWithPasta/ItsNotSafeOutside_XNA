@@ -56,8 +56,8 @@ namespace TestBed
         {
                 m_stillnessTimer = StillnessTime;
                 m_isProjected = true;
-                m_velocity.X = fx;
-                m_velocity.Y = fy;
+                m_velocity.X += fx;
+                m_velocity.Y += fy;
 
                 if (angleIncrementRange != 0)
                 {
@@ -80,7 +80,7 @@ namespace TestBed
 
 			m_transform.Direction += m_angleIncrement * dt;
 
-			m_velocity.Y += 9.8f * Mass * dt; //294 = 9.8 * 3 * 10 => 1m = 20 px
+			m_velocity.Y += 2000 * Mass * dt; 
             m_velocity *= AirFriction;
 			m_transform.PosX += m_velocity.X * dt;
 			m_transform.PosY += m_velocity.Y * dt;

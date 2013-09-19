@@ -128,7 +128,56 @@ namespace PastaGameLibrary
 			m_actionMethod();
 		}
 	}
-	public class Animation : DurationAction, IDisposable
+
+	public class FloatPointerAnimation : DurationAction
+	{
+		public class FloatContainer
+		{
+			public float Value;
+		}
+
+		float m_startValue, m_endValue;
+		FloatContainer m_valueToAnimate;
+
+		public FloatPointerAnimation(MyGame theGame, FloatContainer valueToAnimate, float targetValue, bool isLooping) 
+			: base(theGame, isLooping)
+		{
+			m_startValue = valueToAnimate.Value;
+			m_endValue = targetValue;
+			m_valueToAnimate = valueToAnimate;
+		}
+
+		protected override void OnUpdate()
+		{
+			m_valueToAnimate.Value = Interpolator.GetInterpolation(m_startValue, m_endValue, Timer.ProgressRatio);
+		}
+	}
+	public class Vector2PointerAnimation : DurationAction
+	{
+		public class Vector2Container
+		{
+			public Vector2 Value;
+		}
+
+		Vector2 m_startValue, m_endValue;
+		Vector2Container m_valueToAnimate;
+
+		public Vector2PointerAnimation(MyGame theGame, Vector2Container valueToAnimate, Vector2 targetValue, bool isLooping)
+			: base(theGame, isLooping)
+		{
+			m_startValue = valueToAnimate.Value;
+			m_endValue = targetValue;
+			m_valueToAnimate = valueToAnimate;
+		}
+
+		protected override void OnUpdate()
+		{
+			m_valueToAnimate.Value.X = Interpolator.GetInterpolation(m_startValue.X, m_endValue.X, Timer.ProgressRatio);
+			m_valueToAnimate.Value.Y = Interpolator.GetInterpolation(m_startValue.Y, m_endValue.Y, Timer.ProgressRatio);
+		}
+	}
+
+	public class SpriteSheetAnimation : DurationAction, IDisposable
 	{
 		int m_startFrame, m_endFrame;
 		Sprite m_sprite;
@@ -142,7 +191,7 @@ namespace PastaGameLibrary
 			get { return m_endFrame; }
 		}
 
-		public Animation(Sprite sprite, int startFrame, int endFrame, float intervalInSeconds, bool isLooping) 
+		public SpriteSheetAnimation(Sprite sprite, int startFrame, int endFrame, float intervalInSeconds, bool isLooping) 
 			 : base(sprite.TheGame, isLooping)
 		{
 			m_sprite = sprite;
@@ -161,9 +210,11 @@ namespace PastaGameLibrary
 	}
 	public class DelayAction : DurationAction
 	{
-		public DelayAction(MyGame theGame)
+		public DelayAction(MyGame theGame, float delayTime)
 			: base(theGame, false)
-		{}
+		{
+			Timer.Interval = delayTime;
+		}
 
 		protected override void OnUpdate()
 		{}
@@ -229,6 +280,17 @@ namespace PastaGameLibrary
 		Transform m_transform = null;
 		Vector2 m_target, m_startScale;
 
+		public Vector2 StartScale
+		{
+			get { return m_startScale; }
+			set { m_startScale = value; }
+		}
+		public Vector2 Target
+		{
+			get { return m_target; }
+			set { m_target = value; }
+		}
+
 		public ScaleToAction(MyGame theGame, Transform transform, Vector2 target, bool isLooping)
 			: base(theGame, isLooping)
 		{
@@ -261,10 +323,64 @@ namespace PastaGameLibrary
 			m_transform.Direction = Interpolator.GetInterpolation(m_startRot, m_rotationTarget, Timer.ProgressRatio);
 		}
 	}
+
+	public class Concurrent : Action
+	{
+		Action[] m_actions;
+
+
+		public Concurrent(Action[] actions)
+		{
+			m_actions = actions;
+		}
+
+		protected override void OnUpdate()
+		{
+			int amountOfActive = 0;
+			for (int i = 0; i < m_actions.Length; ++i)
+			{
+				m_actions[i].Update();
+				if (m_actions[i].IsActive)
+					amountOfActive++;
+			}
+			if (amountOfActive == 0)
+				Stop();
+		}
+		protected override void OnStart()
+		{
+			for (int i = 0; i < m_actions.Length; ++i)
+			{
+				m_actions[i].Stop();
+				m_actions[i].Start();
+			}
+		}
+		protected override void OnPause()
+		{
+			for (int i = 0; i < m_actions.Length; ++i)
+				m_actions[i].Pause();
+		}
+		protected override void OnStop()
+		{
+			for (int i = 0; i < m_actions.Length; ++i)
+				m_actions[i].Stop();
+		}
+	}
 	public class Sequence : Action
 	{
 		List<Action> m_actions;
 		int m_currentActive;
+
+
+		public Sequence()
+			: base()
+		{
+			m_actions = new List<Action>();
+		}
+
+		public void AddAction(Action action)
+		{
+			m_actions.Add(action);
+		}
 
 		protected override void OnStart()
 		{
@@ -273,7 +389,8 @@ namespace PastaGameLibrary
 		}
 		protected override void OnStop()
 		{
-			m_actions[m_currentActive].Stop();
+			for(int i = 0; i < m_actions.Count; ++i)
+				m_actions[i].Stop();
 		}
 		protected override void OnUpdate()
 		{
@@ -283,6 +400,8 @@ namespace PastaGameLibrary
 				m_currentActive++;
 				if (m_currentActive >= m_actions.Count)
 					Stop();
+				else
+					m_actions[m_currentActive].Start();
 			}
 		}
 	}

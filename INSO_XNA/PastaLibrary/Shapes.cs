@@ -288,6 +288,11 @@ namespace PastaGameLibrary
 		Vector2 m_origin;
 		Transform m_transform;
 
+
+		public Transform Transform
+		{
+			get { return m_transform; }
+		}
 		public Vector2 Dimensions
 		{
 			get { return m_dimensions; }
@@ -302,6 +307,14 @@ namespace PastaGameLibrary
 		{
 			get { return m_dimensions.Y; }
 			set { m_dimensions.Y = value; }
+		}
+		public float Radius
+		{
+			get {
+				float halfWidth = Width * 0.5f;
+				float halfHeight = Height * 0.5f;
+				return (float)Math.Sqrt(Math.Pow(halfWidth, 2) + Math.Pow(halfHeight, 2));
+			}
 		}
 		public Vector2 Origin
 		{
@@ -450,6 +463,13 @@ namespace PastaGameLibrary
 			m_origin = new Vector2(0.5f, 0.5f);
 			m_dimensions = dimensions;
 			m_transform = transform;
+		}
+
+		public AABB(Sprite sprite)
+		{
+			m_origin = sprite.Origin;
+			m_dimensions = sprite.Dimensions;
+			m_transform = sprite.Transform;
 		}
 	}
 }

@@ -44,7 +44,7 @@ namespace PastaGameLibrary
 	{
 		public float GetInterpolation(float from, float to, float ratio)
 		{
-			return from + (to - from) * (float)(Math.Sin(ratio * Math.PI * 2.0) + 1) * 0.5f;
+			return from + (to - from) * (float)(Math.Sin(ratio * Math.PI));
 		}
 	}
 	public class PSmoothstepInterpolation : IPInterpolation<float>

@@ -12,7 +12,7 @@ namespace TestBed
 	public static class World
 	{
 		const int CameraMoveSpeed = 5;
-		public static KeyboardState kbs;
+
 
 		const float ExtraBgZoom = -0.4f;
 		const float BaseBgZoom = 0.8f;
@@ -28,7 +28,7 @@ namespace TestBed
 
 		public static UpdateList UL_Global;
 		public static DrawingList DL_EarthTiles; //Ground tiles
-		public static DrawingList DL_GrassTiles; //Tiles on top of the ground
+		public static DrawingList DL_House; //Tiles on top of the ground
 		public static DrawingList DL_GroundItems; //Enemies/items...
 		public static DrawingList DL_MiddleGround; //Trees, sign posts
 		public static DrawingList DL_Foreground; //
@@ -40,6 +40,9 @@ namespace TestBed
 		
 
 		public static ParticleSystem PS_Coins;
+
+		public static BasicEffect basicEffect;
+		public static Effect customEffect;
 
 		public static Transform GetFrontTransform()
 		{
@@ -60,7 +63,25 @@ namespace TestBed
 
 		public static void Initialise(InsoGame game)
 		{
-			kbs = new KeyboardState();
+			basicEffect = new BasicEffect(game.GraphicsDevice);
+			Matrix projection = Matrix.CreateOrthographicOffCenter(0, game.ScreenWidth, game.ScreenHeight, 0, 0, 1);
+			Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
+
+			basicEffect.World = Matrix.Identity;
+			basicEffect.View = Matrix.Identity;
+			basicEffect.Projection = halfPixelOffset * projection;
+
+			basicEffect.TextureEnabled = true;
+			basicEffect.VertexColorEnabled = true;
+
+
+			customEffect = game.Content.Load<Effect>("Effects/Flash");
+
+			//customEffect.Parameters["World"].SetValue(Matrix.Identity);
+			//customEffect.Parameters["View"].SetValue(Matrix.Identity);
+			//customEffect.Parameters["Projection"].SetValue(halfPixelOffset * projection);
+
+
 
 			Vector2 focusPoint = new Vector2(Globals.TheGame.ScreenWidth * 0.5f, Globals.TheGame.ScreenHeight * 0.5f);
 
@@ -87,7 +108,7 @@ namespace TestBed
 
 			UL_Global = new UpdateList();
 			DL_EarthTiles = new DrawingList();
-			DL_GrassTiles = new DrawingList();
+			DL_House = new DrawingList();
 			DL_GroundItems = new DrawingList();
 			DL_MiddleGround = new DrawingList();
 			DL_BgLayers[0] = new DrawingList();
@@ -122,19 +143,17 @@ namespace TestBed
 
 		public static void UpdateDebugControls()
 		{
-			kbs = Keyboard.GetState();
-
-			if (kbs.IsKeyDown(Keys.Left))
-				cam_Main.Transform.PosX += CameraMoveSpeed;
-			if (kbs.IsKeyDown(Keys.Right))
+			if (Globals.kbs.IsKeyDown(Keys.Left))
 				cam_Main.Transform.PosX -= CameraMoveSpeed;
-			if (kbs.IsKeyDown(Keys.Up))
-				cam_Main.Transform.PosY += CameraMoveSpeed;
-			if (kbs.IsKeyDown(Keys.Down))
+			if (Globals.kbs.IsKeyDown(Keys.Right))
+				cam_Main.Transform.PosX += CameraMoveSpeed;
+			if (Globals.kbs.IsKeyDown(Keys.Up))
 				cam_Main.Transform.PosY -= CameraMoveSpeed;
-			if (kbs.IsKeyDown(Keys.LeftShift))
+			if (Globals.kbs.IsKeyDown(Keys.Down))
+				cam_Main.Transform.PosY += CameraMoveSpeed;
+			if (Globals.kbs.IsKeyDown(Keys.LeftShift))
 				cam_Main.Zoom *= 1.01f;
-			if (kbs.IsKeyDown(Keys.LeftControl))
+			if (Globals.kbs.IsKeyDown(Keys.LeftControl))
 				cam_Main.Zoom *= 0.99f;
 		}
 
@@ -154,14 +173,16 @@ namespace TestBed
 			DL_BgLayers[0].Draw();
 			sb.End();
 
-
-			sb.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, cam_Main.CameraMatrix);
+			//customEffect.Parameters["View"].SetValue(cam_Main.CameraMatrix);
+			basicEffect.View = cam_Main.CameraMatrix;
+			basicEffect.VertexColorEnabled = true;
+			sb.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, customEffect, cam_Main.CameraMatrix);
 			DL_MiddleGround.Draw();
 			DL_EarthTiles.Draw();
-			DL_GrassTiles.Draw();
+			DL_House.Draw();
 			DL_GroundItems.Draw();
 			DL_ItemDrops.Draw();
-			//DL_Foreground.Draw();
+			DL_Foreground.Draw();
 			sb.End();
 			AttackManager.Slash.Draw();
 		}

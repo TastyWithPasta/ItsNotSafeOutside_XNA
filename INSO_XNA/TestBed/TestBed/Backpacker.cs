@@ -99,7 +99,7 @@ namespace TestBed
 
         private void Die()
         {
-			m_actionManager.StartNew(new Animation(m_sprite, 6, 7, 300, true));
+			m_actionManager.StartNew(new SpriteSheetAnimation(m_sprite, 6, 7, 300, true));
             //UnbindParent();
             m_currentState = BackpackerState.Dead;
             m_group.UpdatePartyLeader();
@@ -168,7 +168,7 @@ namespace TestBed
             {
                 m_currentState = BackpackerState.MovingOut;
                // PlaceBetween(finishHouse.HouseSprite, finishHouse.EntranceMask);
-                m_actionManager.StartNew(new Animation(m_sprite, 0, 1, 0.05f, true));
+                m_actionManager.StartNew(new SpriteSheetAnimation(m_sprite, 0, 1, 0.05f, true));
                 m_targetX = finishHouse.HouseExitPoint;
 				Transform.ParentTransform = null;
             }
@@ -178,7 +178,7 @@ namespace TestBed
             if (!IsDead)
             {
                 m_currentState = BackpackerState.Waving;
-				m_actionManager.StartNew(new Animation(m_sprite, 2, 3, 0.15f, true));
+				m_actionManager.StartNew(new SpriteSheetAnimation(m_sprite, 2, 3, 0.15f, true));
             }
         }
         public void SetGameplay()
@@ -187,7 +187,7 @@ namespace TestBed
             {
 				Transform.ParentTransform = m_group.Transform;
                 m_currentState = BackpackerState.InGameplay;
-                m_actionManager.StartNew(new Animation(m_sprite, 0, 1, 0.5f, true));
+                m_actionManager.StartNew(new SpriteSheetAnimation(m_sprite, 0, 1, 0.5f, true));
                 //CurrentAnimation.SetCurrentFrame(1);
             }
         }

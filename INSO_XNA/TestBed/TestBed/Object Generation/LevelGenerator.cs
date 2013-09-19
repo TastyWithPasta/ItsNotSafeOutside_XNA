@@ -30,8 +30,10 @@ namespace TestBed
 
 		public static SpawnType[] GroundSpawnTypes = 
 		{
+			new SpawnType(typeof(PogoZombie), "PogoZombie", 100),
+			new SpawnType(typeof(FatZombie), "FatZombie", 100),
 			new SpawnType(typeof(BasicZombie), "BasicZombie", 100),
-			new SpawnType(null, "", 100),
+			new SpawnType(null, "", 50),
 			
 			//new SpawnType(typeof(FatZombie), "FatZombie", 50),
 			//new SpawnType(typeof(PogoZombie), "PogoZombie", 40), 
@@ -55,10 +57,10 @@ namespace TestBed
             get { return _currentGenerationNumber; }
         }
 
-        public static Level GetNextLevel()
+        public static Level GetNextLevel(Level currentLevel)
         {
 			Level mate1, mate2;
-            _history.Add(Globals.CurrentLevel);
+			_history.Add(currentLevel);
 
 			_currentGenerationIndex = 0;
 			_currentGenerationNumber++;
@@ -66,6 +68,7 @@ namespace TestBed
 			SelectRandomMates(out mate1, out mate2);
 
             Level child = new Level(mate1, mate2);
+			child.MoveLevelRight(currentLevel);
             //_currentLevelSetup.Print(_currentGenerationIndex);
             _currentGenerationIndex++;
             
@@ -78,7 +81,7 @@ namespace TestBed
 
 			//Averages the difficulties of the last (DifficultyDepth) levels.
 			int depthIndex = DifficultyDepth;
-			for (int i = _history.Count - 1; i > -1 || depthIndex == 0; ++i)
+			for (int i = _history.Count - 1; i > -1 && depthIndex != 0; --i)
 			{
 				difficulty += _history[i].Difficulty;
 				depthIndex--;

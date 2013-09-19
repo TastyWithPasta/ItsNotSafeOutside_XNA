@@ -87,6 +87,7 @@ namespace PastaGameLibrary
 				{
 					m_particles[i] = particle;
 					m_amountOfParticles++;
+					return;
 				}
 		}
 
@@ -94,6 +95,8 @@ namespace PastaGameLibrary
 		{
 			for (int i = 0; i < m_particles.Length; ++i)
 			{
+				if (m_particles[i] == null)
+					continue;
 				m_particles[i].Update();
 				if (m_particles[i].RemoveMe())
 				{
@@ -105,7 +108,10 @@ namespace PastaGameLibrary
 		public void Draw()
 		{
 			for (int i = 0; i < m_particles.Length; ++i)
-				m_particles[i].Draw();
+				if (m_particles[i] == null)
+					continue;
+				else
+					m_particles[i].Draw();
 		}
 	}
 

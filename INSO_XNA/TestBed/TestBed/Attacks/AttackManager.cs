@@ -13,11 +13,13 @@ namespace TestBed
 		const int LengthTrigger = 100;
 
 		public static Slash Slash;
+		public static Shuriken Shuriken;
 
 
 		public static void Initialise(GraphicsDevice device)
 		{
 			Slash = new Slash(device, LengthTrigger);
+			Shuriken = new Shuriken();
 		}
     }
 }

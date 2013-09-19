@@ -18,7 +18,6 @@ namespace TestBed
 	public class InsoGame : MyGame
 	{
 		ColliderGroup colliders;
-		Level level;
 		MoveToStaticAction cameraMove;
 		ScaleToAction cameraZoom;
 
@@ -40,20 +39,6 @@ namespace TestBed
 			AttackManager.Initialise(GraphicsDevice);
 			DestructibleComponent.Initialise();
 
-			List<BackgroundObject> results;
-			results = BackgroundObject.CreateBackgroundObjects(5, null, new Vector2(3000, 1), new Vector2(500, 0), StyleManager.LevelStyle.Country, 0);
-			for (int i = 0; i < results.Count; ++i)
-				results[i].Transform.PosY -= 50;
-			results = BackgroundObject.CreateBackgroundObjects(10, null, new Vector2(3000, 1), new Vector2(300, 0), StyleManager.LevelStyle.Country, 1);
-			for (int i = 0; i < results.Count; ++i)
-				results[i].Transform.PosY -= 100;
-			results = BackgroundObject.CreateBackgroundObjects(10, null, new Vector2(3000, 1), new Vector2(300, 0), StyleManager.LevelStyle.Country, 2);
-			for (int i = 0; i < results.Count; ++i)
-				results[i].Transform.PosY -= 125;
-
-			level = new Level(new Transform());
-			level.BuildFirst();
-
 			cameraMove = new MoveToStaticAction(this, World.cam_Main.Transform, new Vector2(0, -350), false);
 			cameraMove.Interpolator = new PSmoothstepInterpolation();
 			cameraMove.Timer.Interval = 1.0f;
@@ -61,6 +46,11 @@ namespace TestBed
 			cameraZoom = new ScaleToAction(this, World.cam_Main.Transform, new Vector2(0.5f, 0.5f), false);
 			cameraZoom.Interpolator = new PSmoothstepInterpolation();
 			cameraZoom.Timer.Interval = 1.2f;
+
+			Globals.GameScene = new GameScene();
+			Globals.GameScene.BuildNextLevel();
+			Globals.GameScene.StartCurrentLevel();
+			World.cam_Main.Transform.PosX = 500;
 		}
 
 		protected override void LoadContent()
@@ -79,21 +69,25 @@ namespace TestBed
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
 				this.Exit();
 
+			Globals.kbs = Keyboard.GetState();
 			TouchInput.Update();
 
-			if (World.kbs.IsKeyDown(Keys.Space) && !cameraMove.IsActive)
+			if (Globals.kbs.IsKeyDown(Keys.Space) && !cameraMove.IsActive)
 			{
 				World.cam_Main.Transform.PosY = 0;
 				cameraMove.StartPosition = new Vector2(World.cam_Main.Transform.PosX, 0);
 				cameraMove.Target = World.cam_Main.Transform.Position + new Vector2(0, -350);
 
-				cameraZoom.Start();
-				cameraMove.Start();
+				Globals.GameScene.BuildNextLevel();
+				Globals.GameScene.StartCurrentLevel();
+
+				//cameraZoom.Start();
+				//cameraMove.Start();
 				//Coin.SpawnCoin(COIN_TYPE.GOLD, Vector2.Zero);
 			}
-
 			cameraMove.Update();
 			cameraZoom.Update();
+			Globals.GameScene.Update();
 			World.Update();
 		}
 
@@ -103,6 +97,7 @@ namespace TestBed
 			base.Draw(gameTime);
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 			World.Draw();
+			TouchInput.Draw();
 		}
 	}
 }

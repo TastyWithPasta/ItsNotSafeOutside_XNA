@@ -22,6 +22,17 @@ namespace PastaGameLibrary
 		private static Dictionary<string, SpriteSheet> m_spriteSheets = new Dictionary<string, SpriteSheet>();
 		//private string m_basePath = "Content/";
 
+		public static Texture2D PixelTexture;
+		public static SpriteSheet PixelSpriteSheet;
+
+		public static void Initialise(GraphicsDevice device)
+		{
+			PixelTexture = new Texture2D(device, 1, 1);
+			Color[] data = new Color[] { new Color(1.0f, 1.0f, 1.0f, 1.0f) };
+			PixelTexture.SetData<Color>(data);
+			PixelSpriteSheet = new SpriteSheet(PixelTexture);
+		}
+
 		public static void LoadContent(ContentManager Content, string path)
 		{
 			string fullpath;
