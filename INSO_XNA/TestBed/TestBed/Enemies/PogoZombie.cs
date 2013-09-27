@@ -66,7 +66,7 @@ namespace TestBed
 			Backpacker.HitPlayerColliders.Add(m_collider, delegate(Collider other) { m_physics.Throw(10.0f, -10.0f, 0.1f); });
 
 			m_destructible = new DestructibleComponent(Transform, m_collider, m_collider.AABB, 4);
-			m_hitAnimation = new HitAnimation(World.customEffect);
+			m_hitAnimation = new HitAnimation(World.baseEffect);
 			m_impactBox = new AABB(new Transform(Transform, true), new Vector2(20, 60));
 			m_impactBox.Transform.Position = new Vector2(5, -54);
 			m_shurikenReceiver = new ShurikenReceiver(Transform, m_impactBox, 5);

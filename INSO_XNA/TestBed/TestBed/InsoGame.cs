@@ -39,18 +39,20 @@ namespace TestBed
 			AttackManager.Initialise(GraphicsDevice);
 			DestructibleComponent.Initialise();
 
-			cameraMove = new MoveToStaticAction(this, World.cam_Main.Transform, new Vector2(0, -350), false);
+			cameraMove = new MoveToStaticAction(this, World.cam_Main.Transform, new Vector2(0, -350), 1);
 			cameraMove.Interpolator = new PSmoothstepInterpolation();
 			cameraMove.Timer.Interval = 1.0f;
 
-			cameraZoom = new ScaleToAction(this, World.cam_Main.Transform, new Vector2(0.5f, 0.5f), false);
+			cameraZoom = new ScaleToAction(this, World.cam_Main.Transform, new Vector2(0.5f, 0.5f), 1);
 			cameraZoom.Interpolator = new PSmoothstepInterpolation();
 			cameraZoom.Timer.Interval = 1.2f;
 
 			Globals.GameScene = new GameScene();
 			Globals.GameScene.BuildNextLevel();
 			Globals.GameScene.StartCurrentLevel();
-			World.cam_Main.Transform.PosX = 500;
+			World.cam_Main.Transform.Position = new Vector2(500, -100);
+
+			Globals.GameScene.StartIntro();
 		}
 
 		protected override void LoadContent()
@@ -80,6 +82,7 @@ namespace TestBed
 
 				Globals.GameScene.BuildNextLevel();
 				Globals.GameScene.StartCurrentLevel();
+				Globals.GameScene.StartIntro();
 
 				//cameraZoom.Start();
 				//cameraMove.Start();

@@ -42,7 +42,7 @@ namespace TestBed
 		const int AmountOfSectionTypes = 2;
 
 		const int InactiveTileCount = 1; //Tiles in front of the house
-		const int ActiveTileCount = 5; //Level tiles on which the action takes place
+		const int ActiveTileCount = 10; //Level tiles on which the action takes place
 		const int GroundEnemySpawnersPerTile = 5;
 
 		public const int GroundSectionIndex = 0;
@@ -72,6 +72,8 @@ namespace TestBed
 		{
 			get { return m_difficulty; }
 		}
+
+
 		public SpawnerGroup GetSpawners(LevelObjectType type)
 		{
 			return m_spawners[(int)type];

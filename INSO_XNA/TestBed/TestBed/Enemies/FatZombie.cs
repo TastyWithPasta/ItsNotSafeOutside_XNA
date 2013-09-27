@@ -51,15 +51,15 @@ namespace TestBed
 			m_impactBox = new AABB(new Transform(Transform, true), new Vector2(72, 67));
 			m_impactBox.Transform.Position = new Vector2(13, -70);
 			m_shurikenReceiver = new ShurikenReceiver(Transform, m_impactBox, 10);
-			m_hitAnimation = new HitAnimation(World.customEffect);
+			m_hitAnimation = new HitAnimation(World.baseEffect);
 			m_measurer = new AABBMeasurer(new AABB(new Transform(Transform, true), new Vector2(50, 50)));
 
-			m_full = new SpriteSheetAnimation(m_sprite, 0, 1, 0.7f, true);
-			m_noHead1 = new SpriteSheetAnimation(m_sprite, 2, 3, 0.7f, true);
-			m_noHead2 = new SpriteSheetAnimation(m_sprite, 4, 5, 0.7f, true);
-			m_noRightArm = new SpriteSheetAnimation(m_sprite, 6, 7, 0.7f, true);
-			m_noLeftArm = new SpriteSheetAnimation(m_sprite, 8, 9, 0.7f, true);
-			m_noShoulders = new SpriteSheetAnimation(m_sprite, 10, 11, 0.7f, true);
+			m_full = new SpriteSheetAnimation(m_sprite, 0, 1, 0.7f, -1);
+			m_noHead1 = new SpriteSheetAnimation(m_sprite, 2, 3, 0.7f, -1);
+			m_noHead2 = new SpriteSheetAnimation(m_sprite, 4, 5, 0.7f, -1);
+			m_noRightArm = new SpriteSheetAnimation(m_sprite, 6, 7, 0.7f, -1);
+			m_noLeftArm = new SpriteSheetAnimation(m_sprite, 8, 9, 0.7f, -1);
+			m_noShoulders = new SpriteSheetAnimation(m_sprite, 10, 11, 0.7f, -1);
 
 			m_actionManager = new SingleActionManager();
 			m_actionManager.StartNew(m_full);

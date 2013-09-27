@@ -23,7 +23,7 @@ namespace TestBed
 			float scale = (float)Globals.Random.NextDouble() * 0.5f + 0.5f;
 			m_transform.Scale = new Vector2(scale, scale);
 			m_sprite = new Sprite(Globals.TheGame, MiniFireTexture, m_transform);
-			m_animation = new SpriteSheetAnimation(m_sprite, 0, 3, 0.1f, true);
+			m_animation = new SpriteSheetAnimation(m_sprite, 0, 3, 0.1f, -1);
 		}
 
 		public void Update()

@@ -71,12 +71,12 @@ namespace TestBed
 			m_impactBox.Transform.Position = new Vector2(13, -44);
 			m_measurer = new AABBMeasurer(m_impactBox);
 			m_shurikenReceiver = new ShurikenReceiver(Transform, m_impactBox, 5);
-			m_hitAnimation = new HitAnimation(World.customEffect);
+			m_hitAnimation = new HitAnimation(World.baseEffect);
 
-			m_full = new SpriteSheetAnimation(m_sprite, 0, 1, 0.5f, true);
-			m_noHead = new SpriteSheetAnimation(m_sprite, 2, 3, 0.5f, true);
-			m_noLeftArm = new SpriteSheetAnimation(m_sprite, 4, 5, 0.5f, true);
-			m_noRightArm = new SpriteSheetAnimation(m_sprite, 6, 7, 0.5f, true);
+			m_full = new SpriteSheetAnimation(m_sprite, 0, 1, 0.5f, -1);
+			m_noHead = new SpriteSheetAnimation(m_sprite, 2, 3, 0.5f, -1);
+			m_noLeftArm = new SpriteSheetAnimation(m_sprite, 4, 5, 0.5f, -1);
+			m_noRightArm = new SpriteSheetAnimation(m_sprite, 6, 7, 0.5f, -1);
 
 			m_actionManager = new SingleActionManager();
 

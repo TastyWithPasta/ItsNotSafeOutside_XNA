@@ -18,11 +18,17 @@ namespace PastaGameLibrary
 		public void Start()
 		{
 			if (m_isActive)
-				Stop();
+				return;
 			m_isActive = true;
 			m_isPaused = false;
 			OnStart();
 		}
+		public void Restart()
+		{
+			Stop();
+			Start();
+		}
+
 		public void Stop()
 		{
 			m_isActive = false;
@@ -51,18 +57,26 @@ namespace PastaGameLibrary
 		MyGame m_theGame = null;
 		PTimer m_timer = null;
 		IPInterpolation<float> m_interpolator = new PLerpInterpolation();
-		bool m_isLooping;
+		int m_amountOfPlays = -1;
+		int m_initialAmountOfPlays = -1;
 
-		public DurationAction(MyGame theGame, bool isLooping)
+		public DurationAction(MyGame theGame, int amountOfPlays)
 			: base()
 		{
 			m_theGame = theGame;
-			PTimer.TimerTask task;
-			if (isLooping)
-				task = Start;
-			else task = Stop;
-			m_timer = new PTimer(m_theGame.TimerManager, task);
-			m_isLooping = isLooping;
+			m_timer = new PTimer(m_theGame.TimerManager, Loop);
+			m_amountOfPlays = m_initialAmountOfPlays = amountOfPlays;
+		}
+
+		private void Loop()
+		{
+			if (m_amountOfPlays > 0)
+				m_amountOfPlays--;
+
+			if (m_amountOfPlays == 0)
+				Stop();
+			else
+				Start();
 		}
 
 		public IPInterpolation<float> Interpolator
@@ -80,7 +94,7 @@ namespace PastaGameLibrary
 		}
 		public bool IsLooping
 		{
-			get { return m_isLooping; }
+			get { return m_amountOfPlays < 0; }
 		}
 
 		protected override void OnStart()
@@ -99,6 +113,7 @@ namespace PastaGameLibrary
 		{
 			base.OnStop();
 			m_timer.Stop();
+			m_amountOfPlays = m_initialAmountOfPlays;
 		}
 
 		public void Dispose()
@@ -139,8 +154,8 @@ namespace PastaGameLibrary
 		float m_startValue, m_endValue;
 		FloatContainer m_valueToAnimate;
 
-		public FloatPointerAnimation(MyGame theGame, FloatContainer valueToAnimate, float targetValue, bool isLooping) 
-			: base(theGame, isLooping)
+		public FloatPointerAnimation(MyGame theGame, FloatContainer valueToAnimate, float targetValue, int playAmount)
+			: base(theGame, playAmount)
 		{
 			m_startValue = valueToAnimate.Value;
 			m_endValue = targetValue;
@@ -162,8 +177,8 @@ namespace PastaGameLibrary
 		Vector2 m_startValue, m_endValue;
 		Vector2Container m_valueToAnimate;
 
-		public Vector2PointerAnimation(MyGame theGame, Vector2Container valueToAnimate, Vector2 targetValue, bool isLooping)
-			: base(theGame, isLooping)
+		public Vector2PointerAnimation(MyGame theGame, Vector2Container valueToAnimate, Vector2 targetValue, int playAmount)
+			: base(theGame, playAmount)
 		{
 			m_startValue = valueToAnimate.Value;
 			m_endValue = targetValue;
@@ -191,8 +206,8 @@ namespace PastaGameLibrary
 			get { return m_endFrame; }
 		}
 
-		public SpriteSheetAnimation(Sprite sprite, int startFrame, int endFrame, float intervalInSeconds, bool isLooping) 
-			 : base(sprite.TheGame, isLooping)
+		public SpriteSheetAnimation(Sprite sprite, int startFrame, int endFrame, float intervalInSeconds, int playAmount)
+			: base(sprite.TheGame, playAmount)
 		{
 			m_sprite = sprite;
 			m_startFrame = startFrame;
@@ -211,7 +226,7 @@ namespace PastaGameLibrary
 	public class DelayAction : DurationAction
 	{
 		public DelayAction(MyGame theGame, float delayTime)
-			: base(theGame, false)
+			: base(theGame, 1)
 		{
 			Timer.Interval = delayTime;
 		}
@@ -236,8 +251,8 @@ namespace PastaGameLibrary
 			set { m_startPos = value; }
 		}
 
-		public MoveToStaticAction(MyGame theGame, Transform transform, Vector2 target, bool isLooping)
-			: base(theGame, isLooping)
+		public MoveToStaticAction(MyGame theGame, Transform transform, Vector2 target, int playAmount)
+			: base(theGame, playAmount)
 		{
 			m_transform = transform;
 			m_startPos = m_transform.Position;
@@ -258,8 +273,8 @@ namespace PastaGameLibrary
 		Transform m_target;
 		Vector2 m_startPos;
 
-		public MoveToDynamicAction(MyGame theGame, Transform transform, Transform target, bool isLooping)
-			: base(theGame, isLooping)
+		public MoveToDynamicAction(MyGame theGame, Transform transform, Transform target, int playAmount)
+			: base(theGame, playAmount)
 		{
 			m_transform = transform;
 			m_startPos = m_transform.Position;
@@ -291,8 +306,8 @@ namespace PastaGameLibrary
 			set { m_target = value; }
 		}
 
-		public ScaleToAction(MyGame theGame, Transform transform, Vector2 target, bool isLooping)
-			: base(theGame, isLooping)
+		public ScaleToAction(MyGame theGame, Transform transform, Vector2 target, int playAmount)
+			: base(theGame, playAmount)
 		{
 			m_transform = transform;
 			m_startScale = m_transform.Scale;
@@ -311,8 +326,8 @@ namespace PastaGameLibrary
 		float m_rotationTarget, m_startRot;
 		Transform m_transform;
 
-		public RotateToStaticAction(MyGame theGame, Transform transform, float target, bool isLooping)
-			: base(theGame, isLooping)
+		public RotateToStaticAction(MyGame theGame, Transform transform, float target, int playAmount)
+			: base(theGame, playAmount)
 		{
 			m_transform = transform;
 			m_startRot = (float)m_transform.Direction;

@@ -17,7 +17,7 @@ namespace TestBed
 			m_impactSprite = new Sprite(Globals.TheGame, effectSheet, transform);
 			m_impactSprite.Origin = new Microsoft.Xna.Framework.Vector2(0.1f, 0.9f);
 			m_impactSprite.Alpha = 0.3f;
-			m_spriteAnimation = new SpriteSheetAnimation(m_impactSprite, 0, effectSheet.AmountOfFrames - 1, effectLength, false);
+			m_spriteAnimation = new SpriteSheetAnimation(m_impactSprite, 0, effectSheet.AmountOfFrames - 1, effectLength, 1);
 			m_spriteAnimation.Start();
 		}
 

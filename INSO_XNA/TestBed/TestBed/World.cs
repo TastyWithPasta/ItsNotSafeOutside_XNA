@@ -32,7 +32,7 @@ namespace TestBed
 		public static DrawingList DL_GroundItems; //Enemies/items...
 		public static DrawingList DL_MiddleGround; //Trees, sign posts
 		public static DrawingList DL_Foreground; //
-
+		public static DrawingList DL_Backpackers;
 		public static DrawingList DL_ItemDrops;
 
 		//Higher index = deeper
@@ -41,8 +41,7 @@ namespace TestBed
 
 		public static ParticleSystem PS_Coins;
 
-		public static BasicEffect basicEffect;
-		public static Effect customEffect;
+		public static Effect baseEffect;
 
 		public static Transform GetFrontTransform()
 		{
@@ -63,19 +62,11 @@ namespace TestBed
 
 		public static void Initialise(InsoGame game)
 		{
-			basicEffect = new BasicEffect(game.GraphicsDevice);
 			Matrix projection = Matrix.CreateOrthographicOffCenter(0, game.ScreenWidth, game.ScreenHeight, 0, 0, 1);
 			Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
 
-			basicEffect.World = Matrix.Identity;
-			basicEffect.View = Matrix.Identity;
-			basicEffect.Projection = halfPixelOffset * projection;
 
-			basicEffect.TextureEnabled = true;
-			basicEffect.VertexColorEnabled = true;
-
-
-			customEffect = game.Content.Load<Effect>("Effects/Flash");
+			baseEffect = game.Content.Load<Effect>("Effects/Flash");
 
 			//customEffect.Parameters["World"].SetValue(Matrix.Identity);
 			//customEffect.Parameters["View"].SetValue(Matrix.Identity);
@@ -116,6 +107,7 @@ namespace TestBed
 			DL_BgLayers[2] = new DrawingList();
 			DL_ItemDrops = new DrawingList();
 			DL_Foreground = new DrawingList();
+			DL_Backpackers = new DrawingList();
 		}
 
 		public static void Swap()
@@ -174,16 +166,17 @@ namespace TestBed
 			sb.End();
 
 			//customEffect.Parameters["View"].SetValue(cam_Main.CameraMatrix);
-			basicEffect.View = cam_Main.CameraMatrix;
-			basicEffect.VertexColorEnabled = true;
-			sb.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, customEffect, cam_Main.CameraMatrix);
+
+			sb.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, baseEffect, cam_Main.CameraMatrix);
 			DL_MiddleGround.Draw();
 			DL_EarthTiles.Draw();
 			DL_House.Draw();
+			DL_Backpackers.Draw();
 			DL_GroundItems.Draw();
 			DL_ItemDrops.Draw();
 			DL_Foreground.Draw();
 			sb.End();
+
 			AttackManager.Slash.Draw();
 		}
 	}

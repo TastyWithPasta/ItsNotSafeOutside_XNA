@@ -53,7 +53,7 @@ namespace TestBed {
 			m_sprite = new Sprite(Globals.TheGame, CoinTextures[(int)type], Transform);
 			m_sprite.Origin = new Vector2(0.5f, 1.0f);
 			m_physics = new PhysicsComponent(Globals.TheGame, Transform);
-			m_animation = new SpriteSheetAnimation(m_sprite, 0, 5, 0.1f, true);
+			m_animation = new SpriteSheetAnimation(m_sprite, 0, 5, 0.1f, -1);
 			m_animation.Start();
 			m_physics.Throw((float)Globals.Random.NextDouble() * 25, Globals.Random.Next(-30, -10), 0);
             m_physics.Mass = 1.3f;

@@ -26,7 +26,7 @@ namespace TestBed
 			m_shader = shader;
 			m_value = new FloatPointerAnimation.FloatContainer();
 			m_value.Value = 0;
-			m_hitFlashAnimation = new FloatPointerAnimation(Globals.TheGame, m_value, 1, false);
+			m_hitFlashAnimation = new FloatPointerAnimation(Globals.TheGame, m_value, 1, 1);
 			m_hitFlashAnimation.Interpolator = Interpolator;
 			m_hitFlashAnimation.Timer.Interval = HitDuration;
 		}

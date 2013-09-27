@@ -27,7 +27,7 @@ namespace TestBed
 			m_sprite = new Sprite(Globals.TheGame, TextureLibrary.GetSpriteSheet("atk_shuriken", 1, 5), m_transform);
 			m_sprite.Origin = new Vector2(0.5f, 0.0f);
 			m_transform.Scale = new Vector2(3.0f, 3.0f);
-			m_animation = new SpriteSheetAnimation(m_sprite, 0, 4, 0.1f, false);
+			m_animation = new SpriteSheetAnimation(m_sprite, 0, 4, 0.1f, 1);
 			m_pointCollider = new PointCollider(m_attack, Transform);
 
 			World.UL_Global.Add(this, 0);
